@@ -8,11 +8,21 @@ const RScoreCalculator = () => {
 
   const staticTodos = [
     { id: 1, label: "Plan clair défini", bonus: 0.25 },
-    { id: 2, label: "Pas de news importantes", bonus: 0.25 },
-    { id: 3, label: "Volume suffisant", bonus: 0.25 },
+    { id: 3, label: "Volume suffisant +", bonus: 0.25 },
     { id: 4, label: "Pas de FOMO ou doute", bonus: 0.25 },
-    { id: 5, label: "Confluence valide", bonus: 0.5 },
-    { id: 6, label: "SL bien placé", bonus: 0.5 },
+    { id: 5, label: "Confirmation des indicateurs", bonus: 0.25 },
+    { id: 7, label: "Trade sur le top 10 hors BTC", bonus: -0.3 },
+    { id: 8, label: "Trade sur une low cap", bonus: -0.5 },
+    { id: 9, label: "Trade short", bonus: -0.3 },
+    { id: 10, label: "Session US +", bonus: 0.25 },
+    { id: 11, label: "Trade marché US fermé", bonus: -0.3 },
+    { id: 12, label: "Trade au travail", bonus: -0.5 },
+    { id: 13, label: "Possibilité de suivre le trade", bonus: 0.25 },
+    { id: 14, label: "Confirmation du canal Telegram", bonus: 0.25 },
+    { id: 15, label: "Confirmation du canal Discord", bonus: 0.25 },
+    { id: 16, label: "Trade avant une news", bonus: -0.3 },
+    { id: 17, label: "Trade avec la tendance du marché", bonus: 0.25 },
+    { id: 18, label: "Trade à contre sens", bonus: -0.2 }
   ];
 
   const [checked, setChecked] = useState([]);
@@ -69,7 +79,7 @@ const RScoreCalculator = () => {
 
   return (
     <div className="container">
-      <h2>✅ To-Do List de Trading (statique)</h2>
+      <h2 style={{ marginBottom: "1rem" }}>✅ To-Do List de Trading (statique)</h2>
 
       <label>💰 Capital ($) :
         <input type="number" value={capital} onChange={(e) => setCapital(parseFloat(e.target.value))} />
@@ -95,6 +105,7 @@ const RScoreCalculator = () => {
             <label>
               <input
                 type="checkbox"
+                style={{ width: "20px", height: "20px", marginRight: "8px" }}
                 checked={checked.includes(todo.id)}
                 onChange={() => handleCheck(todo.id)}
               />
@@ -108,7 +119,7 @@ const RScoreCalculator = () => {
       <p className="score">💵 R conseillé (après checklist) : <strong>{totalRValue.toFixed(2)} $</strong></p>
 
       <hr />
-      <h3>📏 Calculateur de taille de position</h3>
+      <h3 style={{ marginBottom: "1rem" }}>📏 Calculateur de taille de position</h3>
       <label>Prix d'entrée :
         <input type="number" value={entry} onChange={(e) => setEntry(e.target.value)} />
       </label>

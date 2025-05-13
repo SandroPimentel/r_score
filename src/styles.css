@@ -70,6 +70,10 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
+  input {
+    margin-right: 0.5rem;
+  }
 }
 
 .bonus {

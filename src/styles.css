@@ -1,0 +1,51 @@
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  margin-bottom: 1rem;
+}
+
+.todo-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.todo-list li {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.2);
+}
+
+.bonus {
+  color: lightgreen;
+  font-weight: bold;
+}
+
+.penalty {
+  color: #ff5c5c;
+  font-weight: bold;
+}
+
+.score {
+  font-size: 1.3rem;
+  text-align: center;
+  margin-top: 2rem;
+}

@@ -7,21 +7,20 @@ const RScoreCalculator = () => {
   const [rInput, setRInput] = useState("10");
 
   const staticTodos = [
-    { id: 1, label: "Plan clair défini", bonus: 0.25 },
-    { id: 3, label: "Volume suffisant", bonus: 0.25 },
-    { id: 4, label: "Pas de FOMO ou doute", bonus: 0.25 },
-    { id: 5, label: "Confirmation des indicateurs", bonus: 0.25 },
+    { id: 3, label: "Volume suffisant", bonus: 0.2 },
+    { id: 4, label: "Pas de FOMO", bonus: 0.3 },
+    { id: 5, label: "Confirmation des indicateurs", bonus: 0.2 },
     { id: 7, label: "Trade sur le top 10 hors BTC", bonus: -0.3 },
-    { id: 8, label: "Trade sur une low cap (ne pas cocher une autre case)", bonus: -0.5 },
+    { id: 8, label: "Trade sur une low cap", bonus: -0.5 },
     { id: 9, label: "Trade short", bonus: -0.3 },
-    { id: 10, label: "Session US", bonus: 0.25 },
+    { id: 10, label: "Session US", bonus: 0.3 },
     { id: 11, label: "Trade marché US fermé", bonus: -0.3 },
     { id: 12, label: "Trade au travail", bonus: -0.5 },
     { id: 13, label: "Possibilité de suivre le trade", bonus: 0.25 },
-    { id: 14, label: "Confirmation du canal Telegram", bonus: 0.25 },
-    { id: 15, label: "Confirmation du canal Discord", bonus: 0.25 },
+    { id: 14, label: "Confirmation du canal Telegram", bonus: 0.3 },
+    { id: 15, label: "Confirmation du canal Discord", bonus: 0.4 },
     { id: 16, label: "Trade avant une news", bonus: -0.3 },
-    { id: 17, label: "Trade avec la tendance du marché", bonus: 0.25 },
+    { id: 17, label: "Trade avec la tendance du marché", bonus: 0.2 },
     { id: 18, label: "Trade à contre sens", bonus: -0.2 }
   ];
 

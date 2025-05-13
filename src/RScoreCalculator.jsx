@@ -1,8 +1,22 @@
 import { useEffect, useState } from "react";
 import "./styles.css";
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc } from "firebase/firestore";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+  signOut,
+} from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 
 // Firebase config
 const firebaseConfig = {
@@ -12,7 +26,7 @@ const firebaseConfig = {
   storageBucket: "journal-app-a3326.firebasestorage.app",
   messagingSenderId: "173498770447",
   appId: "1:173498770447:web:60394ed9da7df46687ef7a",
-  measurementId: "G-EB8HD1KXEX"
+  measurementId: "G-EB8HD1KXEX",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -36,16 +50,26 @@ const RScoreCalculator = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (u) => setUser(u));
+
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          setUser(result.user);
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur de redirection Firebase :", error);
+      });
   }, []);
 
-  const login = () => signInWithPopup(auth, provider);
+  const login = () => signInWithRedirect(auth, provider);
   const logout = () => signOut(auth);
 
   useEffect(() => {
     if (!user) return;
     const fetchTodos = async () => {
       const snapshot = await getDocs(collection(db, "todos"));
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setTodos(data);
     };
     fetchTodos();
@@ -62,8 +86,12 @@ const RScoreCalculator = () => {
     return item ? sum + item.bonus : sum;
   }, 0);
 
-  const rBaseValue = rMode === "usd" ? parseFloat(rInput) : (parseFloat(rInput) / 100) * capital;
-  const rPercent = rMode === "percent" ? rInput : ((parseFloat(rInput) / capital) * 100).toFixed(2);
+  const rBaseValue =
+    rMode === "usd" ? parseFloat(rInput) : (parseFloat(rInput) / 100) * capital;
+  const rPercent =
+    rMode === "percent"
+      ? rInput
+      : ((parseFloat(rInput) / capital) * 100).toFixed(2);
   const totalRValue = Math.max(0, rBaseValue * (1 + bonusTotal));
 
   const addTodo = async () => {
@@ -76,8 +104,8 @@ const RScoreCalculator = () => {
 
   const removeTodo = async (id) => {
     await deleteDoc(doc(db, "todos", id));
-    setTodos(todos.filter(t => t.id !== id));
-    setChecked(checked.filter(c => c !== id));
+    setTodos(todos.filter((t) => t.id !== id));
+    setChecked(checked.filter((c) => c !== id));
   };
 
   const calculateSizing = () => {

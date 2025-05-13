@@ -1,90 +1,26 @@
 import { useEffect, useState } from "react";
 import "./styles.css";
-import {
-  initializeApp
-} from "firebase/app";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithRedirect,
-  getRedirectResult,
-  GoogleAuthProvider,
-  signOut,
-} from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
-
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyBSFJmUzrDh7S5mLAV7_DgtqYuDE_01vag",
-  authDomain: "journal-app-a3326.firebaseapp.com",
-  projectId: "journal-app-a3326",
-  storageBucket: "journal-app-a3326.firebasestorage.app",
-  messagingSenderId: "173498770447",
-  appId: "1:173498770447:web:60394ed9da7df46687ef7a",
-  measurementId: "G-EB8HD1KXEX",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
 
 const RScoreCalculator = () => {
-  const [user, setUser] = useState(null);
   const [capital, setCapital] = useState(1000);
   const [rMode, setRMode] = useState("usd");
   const [rInput, setRInput] = useState("10");
-  const [todos, setTodos] = useState([]);
-  const [checked, setChecked] = useState([]);
 
+  const staticTodos = [
+    { id: 1, label: "Plan clair défini", bonus: 0.25 },
+    { id: 2, label: "Pas de news importantes", bonus: 0.25 },
+    { id: 3, label: "Volume suffisant", bonus: 0.25 },
+    { id: 4, label: "Pas de FOMO ou doute", bonus: 0.25 },
+    { id: 5, label: "Confluence valide", bonus: 0.5 },
+    { id: 6, label: "SL bien placé", bonus: 0.5 },
+  ];
+
+  const [checked, setChecked] = useState([]);
   const [entry, setEntry] = useState("");
   const [sl, setSl] = useState("");
   const [tp, setTp] = useState("");
   const [positionSize, setPositionSize] = useState(null);
   const [rr, setRr] = useState(null);
-
-  const login = () => {
-    try {
-      signInWithRedirect(auth, provider);
-    } catch (error) {
-      alert("Erreur de connexion : " + error.message);
-      console.error(error);
-    }
-  };
-
-  const logout = () => signOut(auth);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (u) => setUser(u));
-
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result?.user) {
-          setUser(result.user);
-        }
-      })
-      .catch((error) => {
-        console.error("Erreur de redirection Firebase :", error);
-        alert("Erreur Google Login : " + error.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const fetchTodos = async () => {
-      const snapshot = await getDocs(collection(db, "todos"));
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setTodos(data);
-    };
-    fetchTodos();
-  }, [user]);
 
   const handleCheck = (id) => {
     setChecked((prev) =>
@@ -93,7 +29,7 @@ const RScoreCalculator = () => {
   };
 
   const bonusTotal = checked.reduce((sum, id) => {
-    const item = todos.find((t) => t.id === id);
+    const item = staticTodos.find((t) => t.id === id);
     return item ? sum + item.bonus : sum;
   }, 0);
 
@@ -104,20 +40,6 @@ const RScoreCalculator = () => {
       ? rInput
       : ((parseFloat(rInput) / capital) * 100).toFixed(2);
   const totalRValue = Math.max(0, rBaseValue * (1 + bonusTotal));
-
-  const addTodo = async () => {
-    const label = prompt("Nom de la tâche :");
-    const bonus = parseFloat(prompt("Valeur en R (ex: 0.25 ou -0.5) :"));
-    if (!label || isNaN(bonus)) return;
-    const docRef = await addDoc(collection(db, "todos"), { label, bonus });
-    setTodos([...todos, { id: docRef.id, label, bonus }]);
-  };
-
-  const removeTodo = async (id) => {
-    await deleteDoc(doc(db, "todos", id));
-    setTodos(todos.filter((t) => t.id !== id));
-    setChecked(checked.filter((c) => c !== id));
-  };
 
   const calculateSizing = () => {
     const e = parseFloat(entry);
@@ -145,21 +67,9 @@ const RScoreCalculator = () => {
     calculateSizing();
   }, [entry, sl, tp, totalRValue]);
 
-  if (!user) {
-    return (
-      <div className="container">
-        <h2>🧮 Calculateur de R + Checklist</h2>
-        <button onClick={login}>🔐 Se connecter avec Google</button>
-      </div>
-    );
-  }
-
   return (
     <div className="container">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2>✅ To-Do List de Trading</h2>
-        <button onClick={logout}>🚪 Déconnexion</button>
-      </div>
+      <h2>✅ To-Do List de Trading (statique)</h2>
 
       <label>💰 Capital ($) :
         <input type="number" value={capital} onChange={(e) => setCapital(parseFloat(e.target.value))} />
@@ -180,7 +90,7 @@ const RScoreCalculator = () => {
       </label>
 
       <ul className="todo-list">
-        {todos.map((todo) => (
+        {staticTodos.map((todo) => (
           <li key={todo.id}>
             <label>
               <input
@@ -189,12 +99,10 @@ const RScoreCalculator = () => {
                 onChange={() => handleCheck(todo.id)}
               />
               {todo.label} <span className={todo.bonus >= 0 ? "bonus" : "penalty"}>{todo.bonus >= 0 ? `+${todo.bonus}` : `${todo.bonus}`} R</span>
-              <button onClick={() => removeTodo(todo.id)} style={{ marginLeft: "1rem" }}>🗑</button>
             </label>
           </li>
         ))}
       </ul>
-      <button onClick={addTodo}>➕ Ajouter une tâche</button>
 
       <hr />
       <p className="score">💵 R conseillé (après checklist) : <strong>{totalRValue.toFixed(2)} $</strong></p>

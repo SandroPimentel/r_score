@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./styles.css";
-import { initializeApp } from "firebase/app";
+import {
+  initializeApp
+} from "firebase/app";
 import {
   getAuth,
   onAuthStateChanged,
@@ -48,6 +50,17 @@ const RScoreCalculator = () => {
   const [positionSize, setPositionSize] = useState(null);
   const [rr, setRr] = useState(null);
 
+  const login = () => {
+    try {
+      signInWithRedirect(auth, provider);
+    } catch (error) {
+      alert("Erreur de connexion : " + error.message);
+      console.error(error);
+    }
+  };
+
+  const logout = () => signOut(auth);
+
   useEffect(() => {
     onAuthStateChanged(auth, (u) => setUser(u));
 
@@ -59,11 +72,9 @@ const RScoreCalculator = () => {
       })
       .catch((error) => {
         console.error("Erreur de redirection Firebase :", error);
+        alert("Erreur Google Login : " + error.message);
       });
   }, []);
-
-  const login = () => signInWithRedirect(auth, provider);
-  const logout = () => signOut(auth);
 
   useEffect(() => {
     if (!user) return;

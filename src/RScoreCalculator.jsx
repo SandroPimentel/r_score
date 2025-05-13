@@ -8,13 +8,13 @@ const RScoreCalculator = () => {
 
   const staticTodos = [
     { id: 1, label: "Plan clair défini", bonus: 0.25 },
-    { id: 3, label: "Volume suffisant +", bonus: 0.25 },
+    { id: 3, label: "Volume suffisant", bonus: 0.25 },
     { id: 4, label: "Pas de FOMO ou doute", bonus: 0.25 },
     { id: 5, label: "Confirmation des indicateurs", bonus: 0.25 },
     { id: 7, label: "Trade sur le top 10 hors BTC", bonus: -0.3 },
     { id: 8, label: "Trade sur une low cap", bonus: -0.5 },
     { id: 9, label: "Trade short", bonus: -0.3 },
-    { id: 10, label: "Session US +", bonus: 0.25 },
+    { id: 10, label: "Session US", bonus: 0.25 },
     { id: 11, label: "Trade marché US fermé", bonus: -0.3 },
     { id: 12, label: "Trade au travail", bonus: -0.5 },
     { id: 13, label: "Possibilité de suivre le trade", bonus: 0.25 },
